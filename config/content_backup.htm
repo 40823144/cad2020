@@ -43,7 +43,87 @@
 <p><img alt="" height="577" src="/images/sshend.png" width="1100"/></p>
 <p></p>
 <h1>W7～W9</h1>
-<h1>----期中期末分界線----</h1>
+<h4>利用 SciTE 編輯器類解譯 ANSI C 程式</h4>
+<p><a href="https://bellard.org/tcc/">https://bellard.org/tcc/ </a>是一個小型的 ANSI C 解譯器, 可以與隨身系統中的 SciTE 結合, 讓工程師利用 ANSI C 程式語言進行電腦輔助設計分析.</p>
+<p><span>進行步驟:</span></p>
+<ol>
+<li><span>下載 <a href="http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.27-win64-bin.zip">tcc-0.9.27-win64-bin.zip</a><span>, 解開壓縮檔案後的目錄為 tcc, 其中包含 tcc.exe, 可以用來編譯 ANSI C 程式, 這個目錄必須放在 y:\ 根目錄中.</span></span></li>
+<li><span><span><span>修改start.bat<br/></span></span></span>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">set path_portablegit=%Disk%:\Portablegit\bin;
+set path_julia=%Disk%:\julia-1.5.2\bin;
+set path_tcc=%Disk%:\tcc\;
+ 
+path=%Disk%:;%path_python%;%path_portablegit%;%path_julia%;%path_tcc%;%path%;</pre>
+<br/><span><span><br/><img alt="" height="475" src="/images/ansi1.png" width="511"/></span></span><span><span></span></span><span><span><span></span></span></span><span><span><span><br/>將start.bat 重新啟動, 並在命令列(cmd)中輸入 tcc,出現以下圖狀況即表示啟動命令搜尋路徑已經包含 y:\tcc 目錄.<br/></span></span></span>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">Tiny C Compiler 0.9.27 - Copyright (C) 2001-2006 Fabrice Bellard
+Usage: tcc [options...] [-o outfile] [-c] infile(s)...
+       tcc [options...] -run infile [arguments...]
+General options:
+  -c          compile only - generate an object file
+  -o outfile  set output filename
+  -run        run compiled source
+  -fflag      set or reset (with 'no-' prefix) 'flag' (see tcc -hh)
+  -Wwarning   set or reset (with 'no-' prefix) 'warning' (see tcc -hh)
+  -w          disable all warnings
+  -v -vv      show version, show search paths or loaded files
+  -h -hh      show this, show more help
+  -bench      show compilation statistics
+  -           use stdin pipe as infile
+  @listfile   read arguments from listfile
+Preprocessor options:
+  -Idir       add include path 'dir'
+  -Dsym[=val] define 'sym' with value 'val'
+  -Usym       undefine 'sym'
+  -E          preprocess only
+Linker options:
+  -Ldir       add library path 'dir'
+  -llib       link with dynamic or static library 'lib'
+  -r          generate (relocatable) object file
+  -shared     generate a shared library/dll
+  -rdynamic   export all global symbols to dynamic linker
+  -soname     set name for shared library to be used at runtime
+  -Wl,-opt[=val]  set linker option (see tcc -hh)
+Debugger options:
+  -g          generate runtime debug info
+  -b          compile with built-in memory and bounds checker (implies -g)
+  -bt N       show N callers in stack traces
+Misc. options:
+  -x[c|a|n]   specify type of the next infile
+  -nostdinc   do not use standard system include paths
+  -nostdlib   do not link with standard crt and libraries
+  -Bdir       set tcc's private include/library dir
+  -MD         generate dependency file for make
+  -MF file    specify dependency file name
+  -m32/64     defer to i386/x86_64 cross compiler
+Tools:
+  create library  : tcc -ar [rcsv] lib.a files
+  create def file : tcc -impdef lib.dll [-v] [-o lib.def]</pre>
+<p></p>
+</li>
+<li>
+<p>修改 SciTE 編輯器中的 cpp.properties, 讓 Tools -&gt; Go 可以呼叫 tcc.exe 類解譯編輯器中副檔名為 .c 的 ANSI C 程式.</p>
+<p>作法為開啟 SciTE 功能表 Options 往下點擊 Open cpp.properties 編輯設定檔案, 並且勾選 View -&gt; Line Number 在編輯器中顯示行號, 針對  476 行之後的設定修改如下:</p>
+<pre class="brush:py;auto-links:false;toolbar:false" contenteditable="false">ccopts=-pedantic -Os
+#cc=g++ $(ccopts) -c $(FileNameExt) -o $(FileName).o
+#ccc=gcc $(ccopts) -c $(FileNameExt) -o $(FileName).o
+cc=y:/tcc/tcc.exe -run
+ccc=y:/tcc/tcc.exe -run
+ 
+make.command=make
+command.compile.*.c=$(ccc) -std=c99
+command.build.*.c=$(make.command)
+command.build.*.h=$(make.command)
+command.clean.*.c=$(make.command) clean
+command.clean.*.h=$(make.command) clean
+command.go.*.c=$(cc) $(FileNameExt)
+#command.go.*.c=./$(FileName)
+# To make the Go command both compile (if needed) and execute, use this setting:</pre>
+<p><img alt="" height="179" src="/images/ansi2.png" width="577"/><br/><span></span></p>
+</li>
+<li>
+<p><span>完成上述設定後, 可以在編輯器中納入 hello.c, 並且利用 Tools -&gt; Go 直接進行存檔並且執行.<br/><br/></span></p>
+</li>
+</ol><h1>----期中期末分界線----</h1>
 <p>從期中下一週開始各小組需要利用CoppeliaSim製作一循環機構。</p><h1>W10</h1>
 <h4>第一次小組<span>Meeting</span>：</h4>
 <h4>決定主題，經討論結果決定設計自動化設備</h4>
@@ -64,7 +144,10 @@
 <h4>第六次小組Meeting</h4>
 <h4>討論機構作動途中可能會發生的問題，做改善與調整。</h4>
 <h5><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/9q1hxumPTN8" width="560"></iframe></h5>
-<h1>W16</h1><h1>課程筆記</h1>
+<h1>W16</h1>
+<h4>第七次小組Meeting</h4>
+<h4>機構已全部完成且能循環，每個組員提出自己的貢獻，並由組長進行整理並推送到小組網頁上。</h4>
+<h5><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/tzKLhk5V2O8" width="560"></iframe></h5><h1>課程筆記</h1>
 <p>工程師需要的兩個特質:1.具有創造性 2.聰明的和精巧的創造</p>
 <p>多人網際協同 - 專業定位，無遠弗屆 (國際化)</p>
 <p>持續改進 - 分散版本與歷程 (近端 + 雲端)</p>
